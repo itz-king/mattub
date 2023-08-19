@@ -55,7 +55,7 @@ def unload_plugin(short_name):
                 del ultroid._event_builders[i]
     del LOADED_MODULES[short_name]
 
-plugin_paths = [os.path.join('ub/plugins', filename) for filename in os.listdir('ub/plugins') if os.path.isfile(os.path.join('ub/plugins', filename))]
+plugin_paths = [os.path.join('plugins', filename) for filename in os.listdir('plugins') if os.path.isfile(os.path.join('plugins', filename))]
 logger.info("Loading From Plugins Path !!!")
 for i in plugin_paths:
     load_plugin(i)
@@ -98,5 +98,4 @@ Assistant - <a href="tg://user?id={me.id}">{me.first_name} </a>
 ——————————————————
 Official Support - @Mattt_Murdock</b>''',parse_mode='HTML',buttons=[[Button.url('Support','https://t.me/Mattt_Murdock')]])
 logger.info("ProUb Deployed Successfully Enjoy !!!")
-unload_plugin('bu')
 ultroid.run_until_disconnected()
