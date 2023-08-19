@@ -49,13 +49,13 @@ async def update(event):
         unload_plugin(i)
     try: shutil.rmtree('addons')
     except: pass
-    UPSTREAM_REPO,UPSTREAM_BRANCH="https://github.com/TeamUltroid/Ultroid","main"
+    UPSTREAM_REPO,UPSTREAM_BRANCH="https://github.com/itz-king/ProUB","main"
     srun(["rm", "-rf", ".git"])
     update = srun(
         [
             f"git init -q \
-                     && git config --global user.email evendeadiamthehero04@gmail.com \
-                     && git config --global user.name evendeadiamthehero04 \
+                     && git config --global user.email clashofclan.king124@gmail.com \
+                     && git config --global user.name itz-king \
                      && git add . \
                      && git commit -sm update -q \
                      && git remote add origin {UPSTREAM_REPO} \
