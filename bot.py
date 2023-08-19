@@ -1,4 +1,4 @@
-from . import *
+from telethon.sync import TelegramClient
 from log import LOGGER
 import os
 import sys
@@ -19,9 +19,10 @@ start_time=time.time()
 LOADED_MODULES={}
 ADDONS={}
 
-ultroid.start()
 logger.info("Connected To DB Successfully !!!")
 logger.info("Connecting The Bot !!!")
+ultroid=TelegramClient('ult',api_id=config.API_ID,api_hash=config.API_HASH).start(bot_token=config.BOT_TOKEN)
+ultroid.start()
 me=ultroid.get_entity("me")
 logger.info(f"Connected Successfully As - {me.first_name} ({me.username}) !!!")
 logger.info("————————————————————————————————————————————————————————————————————————————————")
@@ -157,8 +158,10 @@ Assistant - <a href="tg://user?id={me.id}">{me.first_name} </a>
 ——————————————————
 Official Support - @Mattt_Murdock</b>''',parse_mode='HTML',buttons=[[Button.url('Support','https://t.me/Mattt_Murdock')]])
 logger.info("ProUb Deployed Successfully Enjoy !!!")
-rst=udB.get_key("RESTART_MSG")
-if rst: 
-    ultroid.edit_message(rst['chat_id'],rst['msg_id'],"**__Restarted Succesfully !!!__**")
-    udB.del_key('RESTART_MSG')
+try:
+    rst=udB.get_key("RESTART_MSG")
+    if rst: 
+        ultroid.edit_message(rst['chat_id'],rst['msg_id'],"**__Restarted Succesfully !!!__**")
+        udB.del_key('RESTART_MSG')
+except: pass
 ultroid.run_until_disconnected()
