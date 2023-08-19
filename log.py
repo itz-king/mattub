@@ -1,6 +1,10 @@
 import logging
 from logging.handlers import RotatingFileHandler
 import sys
+import os
+
+if os.path.exists('ub.log'):
+    os.remove('ub.log')
 
 logging.basicConfig(
     level=logging.ERROR,  # Set the root logger to capture ERROR level and above
