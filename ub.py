@@ -18,6 +18,8 @@ start_time=time.time()
 
 LOADED_MODULES={}
 ADDONS={}
+FUNCTIONS={}
+HELP_STR={}
 
 logger.info("Connected To DB Successfully !!!")
 logger.info("Connecting The Bot !!!")
@@ -90,11 +92,32 @@ def load_plugin(path,addon=False):
     mod.ADDONS=ADDONS
     mod.load_plugin=load_plugin
     mod.unload_plugin=unload_plugin
+    mod.HELP_STR=HELP_STR
+    mod.FUNCTIONS=FUNCTIONS
     spec.loader.exec_module(mod)
+    with open(path, 'r') as file:
+        code = file.read()
+    node=astroid.parse(code)
+    all_func=[]
+    doc=None
+    for n in node.body:
+        if isinstance(n, astroid.FunctionDef):
+            all_func.append(n.name)
+        elif isinstance(n, astroid.Assign):
+            doc=n.value.value
+    if doc:
+        HELP_STR[base_name]=f"Help For `{base_name}`\n\n**{doc}**\n\n**Powered By [MattUb](https://github.com/itz-king/mattub)**"
+    else:
+        HELP_STR[base_name]=f"Help For `{base_name}`\n\n**No Help String Found For {base_name}**\n\n**Powered By [MattUb](https://github.com/itz-king/mattub)**"
+    FUNCTIONS[base_name]=all_func
+    try:
+        for x, _ in ultroid.list_event_handlers():
+                if x.__name__ in all_func:
+                    FUNCTIONS.append(x.__name__)
+    except: pass
     
-def unload_plugin(short_name,addon=False):
-    if not addon: path=LOADED_MODULES[short_name]
-    else: path=ADDONS[short_name]
+def unload_plugin(short_name):
+    path=ADDONS[short_name]
     all_func=[]
     with open(path, 'r') as file:
         code = file.read()
@@ -112,8 +135,9 @@ def unload_plugin(short_name,addon=False):
             ev, cb = ultroid._event_builders[i]
             if cb.__module__ == name:
                 del ultroid._event_builders[i]
-    if not addon: del LOADED_MODULES[short_name]
-    else: del ADDONS[short_name]
+    del ADDONS[short_name]
+    del FUNCTIONS[short_name]
+    del HELP_STR[short_name]
 
 plugin_paths = [os.path.join('plugins', filename) for filename in os.listdir('plugins') if os.path.isfile(os.path.join('plugins', filename))]
 logger.info("Loading From Plugins Path !!!")

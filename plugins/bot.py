@@ -5,6 +5,14 @@ import shutil
 from subprocess import run as srun
 from asyncio import create_subprocess_exec, gather
 
+_doc_='''• `/alive` - Check Alive
+
+• `/ping` - Ping The Bot
+
+• `/restart` - Restart The Bot
+
+• `/update` - Update The Bot'''
+
 @ultroid_cmd(pattern="alive$",owner_only=True)
 async def alive(event):
     owner=await ultroid.get_entity(config.OWNER)
