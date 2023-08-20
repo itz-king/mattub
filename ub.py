@@ -49,6 +49,7 @@ def ultroid_cmd(pattern, owner_only=False):
             await func(event)
         ptrn = rf'^[{re.escape(config.HNDLR)}]{pattern}'
         ultroid.on(events.NewMessage(pattern=ptrn))(wrapper)
+        wrapper.org = func.__name__
         return wrapper
     return decorator
 def time_formatter(seconds: int) -> str:
@@ -133,7 +134,9 @@ def unload_plugin(short_name):
             all_func.append(n.name)
     try:
         for x, _ in ultroid.list_event_handlers():
-                if x.__name__ in all_func:
+                nm=getattr(x,'org',None)
+                if not nm: nm=x.__name__
+                if getattr(x,'org') in all_func:
                     ultroid.remove_event_handler(x)
     except (ValueError, KeyError):
         name = f"addons.{shortname}"
@@ -144,7 +147,8 @@ def unload_plugin(short_name):
     del ADDONS[short_name]
     del FUNCTIONS[short_name]
     del HELP_STR[short_name]
-    del sys.modules[short_name]
+    try: del sys.modules[short_name]
+    except: pass
 
 plugin_paths = [os.path.join('plugins', filename) for filename in os.listdir('plugins') if os.path.isfile(os.path.join('plugins', filename))]
 logger.info("Loading From Plugins Path !!!")

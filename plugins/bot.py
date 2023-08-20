@@ -44,7 +44,7 @@ async def restart(event):
         unload_plugin(i)
     try: shutil.rmtree('addons')
     except: pass
-    os.execl(sys.executable,sys.executable, "bot.py")
+    os.execl(sys.executable,sys.executable,'-B', "ub.py")
 
 @ultroid_cmd(pattern="logs$",owner_only=True)
 async def logs(event):
