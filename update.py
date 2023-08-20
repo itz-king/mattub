@@ -22,7 +22,7 @@ update = srun(
 
 if update.returncode == 0:
         print("Successfully Updated The Bot !!!")
-        with open('env','w') as f:
+        with open('.env','w') as f:
             f.write(env)
 else:
         print(
