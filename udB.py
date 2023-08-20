@@ -33,10 +33,10 @@ def get_key( key):
         except:
             return False
     
-def del_key( key):
+def del_key(key):
         try:
             del config_dict[key]
-            sync_changes()
+            col.update_one({'_id':'ub'},{'$unset':{f'ub.{key}':1}})
             return True
         except:
             return False
