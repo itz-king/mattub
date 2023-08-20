@@ -101,7 +101,7 @@ def load_plugin(path,addon=False):
         mod.HELP_STR=HELP_STR
         mod.FUNCTIONS=FUNCTIONS
         spec.loader.exec_module(mod)
-    except Exception as e: raise Error(f'**Error - {e}**')
+    except Exception as e: raise Error(f'**Error - `{e}`**')
     with open(path, 'r') as file:
         code = file.read()
     node=astroid.parse(code)
