@@ -11,10 +11,14 @@ import astroid
 import asyncio
 import re
 import time
+import traceback
 
 logger=LOGGER('initialising')
 
 start_time=time.time()
+
+class Error(Exception):
+    pass
 
 LOADED_MODULES={}
 ADDONS={}
@@ -68,33 +72,35 @@ def time_formatter(seconds: int) -> str:
     up_time += ":".join(time_list)
     return up_time
 def load_plugin(path,addon=False):
-    base_name=os.path.basename(path).replace("/",'.').replace("\\",'.').replace('.py','')
-    if not addon: LOADED_MODULES[base_name]=path
-    else: ADDONS[base_name]=path
-    spec = util.spec_from_file_location(base_name, path)
-    mod = util.module_from_spec(spec)
-    mod.udB = udB
-    mod.asst = ultroid
-    mod.bot = ultroid
-    mod.ultroid = ultroid
-    mod.logger = LOGGER(base_name)
-    mod.config = config
-    mod.events=events
-    mod.Button=Button
-    mod.asyncio=asyncio
-    mod.os=os
-    mod.sys=sys
-    mod.thumbnail=thumbnail
-    mod.ultroid_cmd=ultroid_cmd
-    mod.time_formatter=time_formatter
-    mod.start_time=start_time
-    mod.LOADED_MODULES=LOADED_MODULES
-    mod.ADDONS=ADDONS
-    mod.load_plugin=load_plugin
-    mod.unload_plugin=unload_plugin
-    mod.HELP_STR=HELP_STR
-    mod.FUNCTIONS=FUNCTIONS
-    spec.loader.exec_module(mod)
+    try:
+        base_name=os.path.basename(path).replace("/",'.').replace("\\",'.').replace('.py','')
+        if not addon: LOADED_MODULES[base_name]=path
+        else: ADDONS[base_name]=path
+        spec = util.spec_from_file_location(base_name, path)
+        mod = util.module_from_spec(spec)
+        mod.udB = udB
+        mod.asst = ultroid
+        mod.bot = ultroid
+        mod.ultroid = ultroid
+        mod.logger = LOGGER(base_name)
+        mod.config = config
+        mod.events=events
+        mod.Button=Button
+        mod.asyncio=asyncio
+        mod.os=os
+        mod.sys=sys
+        mod.thumbnail=thumbnail
+        mod.ultroid_cmd=ultroid_cmd
+        mod.time_formatter=time_formatter
+        mod.start_time=start_time
+        mod.LOADED_MODULES=LOADED_MODULES
+        mod.ADDONS=ADDONS
+        mod.load_plugin=load_plugin
+        mod.unload_plugin=unload_plugin
+        mod.HELP_STR=HELP_STR
+        mod.FUNCTIONS=FUNCTIONS
+        spec.loader.exec_module(mod)
+    except Exception as e: raise Error(f'**Error - {e}**')
     with open(path, 'r') as file:
         code = file.read()
     node=astroid.parse(code)
@@ -138,6 +144,7 @@ def unload_plugin(short_name):
     del ADDONS[short_name]
     del FUNCTIONS[short_name]
     del HELP_STR[short_name]
+    del sys.modules[short_name]
 
 plugin_paths = [os.path.join('plugins', filename) for filename in os.listdir('plugins') if os.path.isfile(os.path.join('plugins', filename))]
 logger.info("Loading From Plugins Path !!!")
