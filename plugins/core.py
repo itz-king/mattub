@@ -1,3 +1,6 @@
+_doc_='''• `/install <reply to file>` - Install A Plugin
+
+• `/uninstall <plugin name>` - Uninstall A Plugin'''
 
 @ultroid_cmd(pattern="install$",owner_only=True)
 async def install(event):
