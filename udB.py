@@ -36,7 +36,7 @@ def get_key( key):
 def del_key(key):
         try:
             del config_dict[key]
-            col.update_one({'_id':'ub'},{'$unset':{f'ub.{key}':1}})
+            col.update_one({'_id':'ub'},{'$unset':{key:1}})
             return True
         except:
             return False
