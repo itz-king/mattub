@@ -48,7 +48,8 @@ async def restart(event):
 
 @ultroid_cmd(pattern="logs$",owner_only=True)
 async def logs(event):
-    await event.reply("**Logs**",file='ub.log')
+    await ultroid.send_file(event.chat_id,'ub.log',force_document=True,thumb='thumb.jpg',allow_cache=False,
+    caption="**LOG File**",reply_to=event.id)
 
 @ultroid_cmd(pattern="update$",owner_only=True)
 async def update(event):
