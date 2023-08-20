@@ -151,13 +151,13 @@ if udB.get_key('PLUGIN_CHANNEL'):
             base_name=os.path.basename(d_path).replace('.py','')
             logger.info(f'• Loaded Addon - {base_name} !!!')
 logger.info("————————————————————————————————————————————————————————————————————————————————")
-if udB.get_key('DEPLOY_MSG'): ultroid.send_message(config.OWNER,f'''<b>ProUb Deployed Successfully Enjoy !!!
+if udB.get_key('DEPLOY_MSG'): ultroid.send_message(config.OWNER,f'''<b>MattUb Deployed Successfully Enjoy !!!
 ——————————————————
 Master - <a href="tg://user?id={config.OWNER}">{ultroid.get_entity(config.OWNER).first_name}</a>
 Assistant - <a href="tg://user?id={me.id}">{me.first_name} </a>
 ——————————————————
 Official Support - @Mattt_Murdock</b>''',parse_mode='HTML',buttons=[[Button.url('Support','https://t.me/Mattt_Murdock')]])
-logger.info("ProUb Deployed Successfully Enjoy !!!")
+logger.info("MattUb Deployed Successfully Enjoy !!!")
 try:
     rst=udB.get_key("RESTART_MSG")
     if rst: 

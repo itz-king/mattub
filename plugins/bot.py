@@ -11,13 +11,13 @@ async def alive(event):
     me=await ultroid.get_entity("me")
     pic=udB.get_key('ALIVE_PIC')
     uptime=time_formatter(int(time.time() - start_time))
-    fmt=f'''<b>「 <a href="tg://user?id={me.id}">Pro Userbot</a> 」
+    fmt=f'''<b>「 <a href="tg://user?id={me.id}">Matt Userbot</a> 」
 My Master : <a href='tg://user?id={owner.id}'>{owner.first_name}</a>
 Date : {datetime.now().strftime("%B %d, %Y")}
 Telethon Version : {__version__}
 Uptime : {uptime}</b>'''
     pic="https://telegra.ph/file/651eef7ff3c0209dca8da.jpg" if not pic else pic
-    await event.reply(text , file=pic , parse_mode='HTML')
+    await event.reply(fmt , file=pic , parse_mode='HTML')
 
 @ultroid_cmd(pattern="ping$",owner_only=True)
 async def ping(event):
@@ -52,4 +52,4 @@ async def update(event):
     except: pass
     proc = await create_subprocess_exec("python3", "update.py")
     await gather(proc.wait())
-    os.execl(sys.executable,sys.executable, "bot.py")
+    os.execl(sys.executable,sys.executable, "ub.py")
