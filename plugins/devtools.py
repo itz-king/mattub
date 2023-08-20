@@ -4,7 +4,7 @@ _doc_='''• `/install <reply to file>` - Install A Plugin
 
 import asyncio
 import re
-import io
+from io import BytesIO, StringIO
 import traceback
 
 async def bash(cmd, run_code=0):
@@ -48,10 +48,11 @@ async def sysinfo(event):
 async def eval(event):
     try:cmd=event.raw_text.split(maxsplit=1)[1]
     except: return await event.reply("**Give Eval Code !!!**")
+    xx=await event.reply('**Processing...**')
     old_stderr = sys.stderr
     old_stdout = sys.stdout
-    redirected_output = sys.stdout = io.StringIO()
-    redirected_error = sys.stderr = io.StringIO()
+    redirected_output = sys.stdout = StringIO()
+    redirected_error = sys.stderr = StringIO()
     stdout, stderr, exc = None, None, None
     try:
         await aexec(cmd,event)
@@ -73,12 +74,47 @@ async def eval(event):
     if len(evaluation)>4096:
         with open('eval.txt','w') as f:
             f.write(evaluation)
-        await event.reply(f'''<b>• Eval :-
-<code>{cmd}</code></b>''',parse_mode='HTML',file='eval.txt')
+        await ultroid.send_file(event.chat_id,'eval.txt',force_document=True,thumb='thumb.jpg',allow_cache=False,caption=f'''<b>• Eval :-
+<code>{cmd}</code></b>''',parse_mode='HTML',reply_to=event.id)
         os.remove('eval.txt')
+        await xx.delete()
     else:
-        await event.reply(f'''<b>• Eval :-
+        await xx.edit(f'''<b>• Eval :-
 <code>{cmd.strip()}</code>
 
 • Result :- 
 <code>{evaluation.strip()}</code></b>''',parse_mode='HTML')
+
+@ultroid_cmd(pattern='bash ?(.*)',owner_only=True)
+async def bash_(event):
+    try:cmd=event.raw_text.split(maxsplit=1)[1]
+    except: return await event.reply("**Give Bash Code !!!**")
+    xx=await event.reply('**Processing...**')
+    stdout, stderr = await bash(cmd, run_code=1)
+    OUT = f"**☞ BASH\n\n• COMMAND:**\n`{cmd}` \n\n"
+    err, out = "", ""
+    if stderr:
+        err = f"**• ERROR:** \n`{stderr}`\n\n"
+    if stdout:
+            stdout = f"`{stdout}`"
+            out = f"**• OUTPUT:**\n{stdout}"
+    if not stderr and not stdout:
+        out = "**• OUTPUT:**\n`Success`"
+    OUT += err + out
+    if len(OUT) > 4096:
+        ultd = err + out
+        with BytesIO(str.encode(ultd)) as out_file:
+            out_file.name = "bash.txt"
+            await event.client.send_file(
+                event.chat_id,
+                out_file,
+                force_document=True,
+                thumb='thumb.jpg',
+                allow_cache=False,
+                caption=f"`{cmd}`" if len(cmd) < 998 else None,
+                reply_to=event.id,
+            )
+
+            await xx.delete()
+    else:
+        await xx.edit(OUT, link_preview=False)

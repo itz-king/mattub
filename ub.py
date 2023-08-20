@@ -31,7 +31,7 @@ ultroid=TelegramClient('ult',api_id=config.API_ID,api_hash=config.API_HASH).star
 ultroid.start()
 me=ultroid.get_entity("me")
 logger.info(f"Connected Successfully As - {me.first_name} ({me.username}) !!!")
-logger.info("————————————————————————————————————————————————————————————————————————————————")
+logger.info("»«»«»«»«»»«»«»«»«»»«»«»«»«»")
 logger.info("Starting To Load Modules !!!")
 def thumbnail():
     x=udB.get_key('THUMB')
@@ -41,6 +41,7 @@ def thumbnail():
         return False
     else:
         return x
+os.system(f"curl -s -o 'thumb.jpg' '{thumbnail()}'")
 def ultroid_cmd(pattern, owner_only=False):
     def decorator(func):
         async def wrapper(event):
@@ -156,13 +157,13 @@ for i in plugin_paths:
     load_plugin(i)
     base_name=os.path.basename(i).replace('.py','')
     logger.info(f'• Loaded Official Plugin - {base_name} !!!')
-logger.info("————————————————————————————————————————————————————————————————————————————————")
+logger.info("»«»«»«»«»»«»«»«»«»»«»«»«»«»")
 
 def iter_messages(chat_id , search=False , reverse=False):
     messages=[]
     msgid=1
     wrong=1
-    while (wrong<=5):
+    while (wrong<=20):
         try:
             x=ultroid.get_messages(chat_id,ids=msgid)
             if x: 
@@ -177,15 +178,16 @@ def iter_messages(chat_id , search=False , reverse=False):
     else: return messages
 
 if udB.get_key('PLUGIN_CHANNEL'):
-    logger.info("Loading From PLUGIN CHANNEL !!!")
     messages=iter_messages(udB.get_key('PLUGIN_CHANNEL'))
-    for i in messages:
-        if i.document and i.file.name.endswith('.py'):
-            d_path=ultroid.download_media(i.media ,  file=f"addons/{i.file.name}")
-            load_plugin(d_path)
-            base_name=os.path.basename(d_path).replace('.py','')
-            logger.info(f'• Loaded Addon - {base_name} !!!')
-logger.info("————————————————————————————————————————————————————————————————————————————————")
+    if len(messages)>0:
+        logger.info("Loading From PLUGIN CHANNEL !!!")
+        for i in messages:
+            if i.document and i.file.name.endswith('.py'):
+                d_path=ultroid.download_media(i.media ,  file=f"addons/{i.file.name}")
+                load_plugin(d_path)
+                base_name=os.path.basename(d_path).replace('.py','')
+                logger.info(f'• Loaded Addon - {base_name} !!!')
+    logger.info("»«»«»«»«»»«»«»«»«»»«»«»«»«»")
 if udB.get_key('DEPLOY_MSG'): ultroid.send_message(config.OWNER,f'''<b>MattUb Deployed Successfully Enjoy !!!
 ——————————————————
 Master - <a href="tg://user?id={config.OWNER}">{ultroid.get_entity(config.OWNER).first_name}</a>
@@ -193,6 +195,7 @@ Assistant - <a href="tg://user?id={me.id}">{me.first_name} </a>
 ——————————————————
 Official Support - @Mattt_Murdock</b>''',parse_mode='HTML',buttons=[[Button.url('Support','https://t.me/Mattt_Murdock')]])
 logger.info("MattUb Deployed Successfully Enjoy !!!")
+logger.info("»«»«»«»«»»«»«»«»«»»«»«»«»«»")
 try:
     rst=udB.get_key("RESTART_MSG")
     if rst: 
