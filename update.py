@@ -1,5 +1,5 @@
 from subprocess import run as srun
-from os import ospath
+from os import path as ospath
 
 UPSTREAM_REPO,UPSTREAM_BRANCH="https://github.com/itz-king/mattub","main"
 if ospath.exists(".git"):
