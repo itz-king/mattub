@@ -49,6 +49,7 @@ def ultroid_cmd(pattern, owner_only=False):
                 return
             await func(event)
         ptrn = rf'^[{re.escape(config.HNDLR)}]{pattern}'
+        ultroid.on(events.MessageEdited(pattern=ptrn))(wrapper)
         ultroid.on(events.NewMessage(pattern=ptrn))(wrapper)
         wrapper.org = func.__name__
         return wrapper
@@ -154,9 +155,10 @@ def unload_plugin(short_name):
 plugin_paths = [os.path.join('plugins', filename) for filename in os.listdir('plugins') if os.path.isfile(os.path.join('plugins', filename))]
 logger.info("Loading From Plugins Path !!!")
 for i in plugin_paths:
-    load_plugin(i)
     base_name=os.path.basename(i).replace('.py','')
-    logger.info(f'• Loaded Official Plugin - {base_name} !!!')
+    if not (base_name.startswith("_") or base_name.startswith("__")):
+        load_plugin(i)
+        logger.info(f'• Loaded Official Plugin - {base_name} !!!')
 logger.info("»«»«»«»«»»«»«»«»«»»«»«»«»«»")
 
 def iter_messages(chat_id , search=False , reverse=False):
