@@ -52,4 +52,4 @@ async def update(event):
     except: pass
     proc = await create_subprocess_exec("python3", "update.py")
     await gather(proc.wait())
-    os.execl(sys.executable,sys.executable, "ub.py")
+    os.execl(sys.executable,sys.executable,'-B',"ub.py")
