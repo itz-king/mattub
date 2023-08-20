@@ -36,6 +36,7 @@ def get_key( key):
 def del_key( key):
         try:
             del config_dict[key]
+            sync_changes()
             return True
         except:
             return False
