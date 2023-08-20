@@ -3,6 +3,7 @@ from datetime import datetime
 import time
 import shutil
 from subprocess import run as srun
+from asyncio import create_subprocess_exec, gather
 
 @ultroid_cmd(pattern="alive$",owner_only=True)
 async def alive(event):
@@ -49,19 +50,6 @@ async def update(event):
         unload_plugin(i)
     try: shutil.rmtree('addons')
     except: pass
-    UPSTREAM_REPO,UPSTREAM_BRANCH="https://github.com/itz-king/ProUB","main"
-    srun(["rm", "-rf", ".git"])
-    update = srun(
-        [
-            f"git init -q \
-                     && git config --global user.email clashofclan.king124@gmail.com \
-                     && git config --global user.name itz-king \
-                     && git add . \
-                     && git commit -sm update -q \
-                     && git remote add origin {UPSTREAM_REPO} \
-                     && git fetch origin -q \
-                     && git reset --hard origin/{UPSTREAM_BRANCH} -q"
-        ],
-        shell=True,
-    )
+    proc = await create_subprocess_exec("python3", "update.py")
+    await gather(proc.wait())
     os.execl(sys.executable,sys.executable, "bot.py")
