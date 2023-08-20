@@ -115,9 +115,17 @@ def load_plugin(path,addon=False):
         elif isinstance(n, astroid.Assign):
             doc=n.value.value
     if doc:
-        HELP_STR[base_name]=f"Help For `{base_name}`\n\n**{doc}**\n\n**Powered By [MattUb](https://github.com/itz-king/mattub)**"
+        HELP_STR[base_name]=f'''**Help For** `{base_name}`
+        
+**{doc.strip()}**
+        
+**Powered By** [MattUb](https://github.com/itz-king/mattub)'''
     else:
-        HELP_STR[base_name]=f"Help For `{base_name}`\n\n**No Help String Found For {base_name}**\n\n**Powered By [MattUb](https://github.com/itz-king/mattub)**"
+        HELP_STR[base_name]=HELP_STR[base_name]=f'''**Help For** `{base_name}`
+        
+No Help String Found For `{base_name}`
+        
+**Powered By** [MattUb](https://github.com/itz-king/mattub)'''
     FUNCTIONS[base_name]=all_func
     try:
         for x, _ in ultroid.list_event_handlers():

@@ -1,6 +1,8 @@
-_doc_='''• `/install <reply to file>` - Install A Plugin
+_doc_='''• `/sysinfo` - Get Info About System
 
-• `/uninstall <plugin name>` - Uninstall A Plugin'''
+• `/eval <code>` - Run Python Codes
+
+• `/bash <command>` - Run Terminal Commands'''
 
 import asyncio
 import re
