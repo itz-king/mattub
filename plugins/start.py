@@ -40,7 +40,7 @@ async def helpcb(event):
             Button.inline('Plugins','help plugins 1'),
             Button.inline('Addons','help addons 1')
         ]],link_preview=False)
-    if args[0] == 'plugins':
+    if args[0] == 'plugins' and len(args)<3:
         page=int(args[-1])
         x=[i for i in LOADED_MODULES]
         sorted(x)
@@ -48,7 +48,7 @@ async def helpcb(event):
         button=[[]]
         for i in xx:
             for j in i:
-                button[-1].append(Button.inline(f'✘ {j.capitalize()} ✘',f'help {j}'))
+                button[-1].append(Button.inline(f'✘ {j.capitalize()} ✘',f'help plugins {j} {page}'))
             button.append([])
         if (page-1)<1: 
             prev=math.ceil(len(x)/8)
@@ -67,7 +67,7 @@ async def helpcb(event):
         ])
         try:await event.edit(fmt.format(len(LOADED_MODULES),len(ADDONS),len(f_count)) , buttons=button,link_preview=False)
         except: await event.answer()
-    elif args[0] == "addons":
+    elif args[0] == "addons" and len(args)<3:
         page=int(args[-1])
         x=[i for i in ADDONS]
         if len(x)==0: return await event.answer("No Addons Installed",alert=True)
@@ -76,7 +76,7 @@ async def helpcb(event):
         button=[[]]
         for i in xx:
             for j in i:
-                button[-1].append(Button.inline(f'✘ {j.capitalize()} ✘',f'help {j}'))
+                button[-1].append(Button.inline(f'✘ {j.capitalize()} ✘',f'help addons {j} {page}'))
             button.append([])
         if (page-1)<1: 
             prev=math.ceil(len(x)/8)
@@ -89,9 +89,13 @@ async def helpcb(event):
             prev=page-1
             next_=page+1
         button.append([
-            Button.inline(' « ',f'help addons {prev}'),
-            Button.inline(' Back ',f'help'),
-            Button.inline(' » ',f'help addons {next_}'),
+            Button.inline('«',f'help addons {prev}'),
+            Button.inline('Back',f'help'),
+            Button.inline('»',f'help addons {next_}'),
         ])
         try:await event.edit(fmt.format(len(LOADED_MODULES),len(ADDONS),len(f_count)) , buttons=button,link_preview=False)
         except: await event.answer()
+    else:
+        await event.edit(HELP_STR[args[1]],buttons=[[
+            Button.inline('Back',f'help {args[0]} {args[2]}')
+        ]])

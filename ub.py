@@ -125,7 +125,7 @@ def load_plugin(path,addon=False):
     else:
         HELP_STR[base_name]=HELP_STR[base_name]=f'''**Help For** `{base_name}`
         
-No Help String Found For `{base_name}`
+**No Help String Found For `{base_name}`**
         
 **Powered By** [MattUb](https://github.com/itz-king/mattub)'''
     
