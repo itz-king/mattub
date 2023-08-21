@@ -53,6 +53,7 @@ def ultroid_cmd(pattern, owner_only=False,sudo_also=False):
                 if not event.sender_id in sudo_list+[config.OWNER]: return
             await func(event)
         ptrn = rf'^[{re.escape(config.HNDLR)}]{pattern}'
+        ultroid.on(events.MessageEdited(pattern=ptrn))(wrapper)
         ultroid.on(events.NewMessage(pattern=ptrn))(wrapper)
         wrapper.org = func.__name__
         return wrapper
@@ -187,7 +188,7 @@ if udB.get_key('PLUGIN_CHANNEL'):
         for i in messages:
             if i.document and i.file.name.endswith('.py'):
                 d_path=ultroid.download_media(i.media ,  file=f"addons/{i.file.name}")
-                load_plugin(d_path)
+                load_plugin(d_path,addon=True)
                 base_name=os.path.basename(d_path).replace('.py','')
                 logger.info(f'• Loaded Addon - {base_name} !!!')
     logger.info("»«»«»«»«»»«»«»«»«»»«»«»«»«»")
