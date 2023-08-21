@@ -35,7 +35,7 @@ async def aexec(code, event):
     )
     return await locals()["__aexec"](event, event.client)
 
-@ultroid_cmd(pattern='sysinfo$',owner_only=True)
+@ultroid_cmd(pattern='sysinfo$',sudo_also=True)
 async def sysinfo(event):
     xx=await event.reply('**Processing...**')
     x, y = await bash("neofetch|sed 's/\x1B\\[[0-9;\\?]*[a-zA-Z]//g' >> neo.txt")

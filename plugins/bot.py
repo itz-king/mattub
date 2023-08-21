@@ -13,7 +13,7 @@ _doc_='''• `/alive` - Check Alive
 
 • `/update` - Update The Bot'''
 
-@ultroid_cmd(pattern="alive$",owner_only=True)
+@ultroid_cmd(pattern="alive$",sudo_also=True)
 async def alive(event):
     owner=await ultroid.get_entity(config.OWNER)
     me=await ultroid.get_entity("me")
@@ -27,7 +27,7 @@ Uptime : {uptime}</b>'''
     pic="https://telegra.ph/file/651eef7ff3c0209dca8da.jpg" if not pic else pic
     await event.reply(fmt , file=pic , parse_mode='HTML')
 
-@ultroid_cmd(pattern="ping$",owner_only=True)
+@ultroid_cmd(pattern="ping$",sudo_also=True)
 async def ping(event):
     x=await event.reply("**Ping !**")
     start = time.time()

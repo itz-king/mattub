@@ -80,7 +80,7 @@ async def deldb(event):
         return await event.reply(f"**Deleted Var - `{matchs}`**")
     else: return await event.reply(f"**No Var Named -   `{matchs}`**")
 
-@ultroid_cmd(pattern="listdb",owner_only=True)
+@ultroid_cmd(pattern="listdb",sudo_also=True)
 async def listdb(event):
     x=udB.list_keys()
     string='</code>\n• <code>'.join(x)
