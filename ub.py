@@ -22,7 +22,6 @@ class Error(Exception):
 
 LOADED_MODULES={}
 ADDONS={}
-FUNCTIONS={}
 HELP_STR={}
 
 logger.info("Connected To DB Successfully !!!")
@@ -42,11 +41,16 @@ def thumbnail():
     else:
         return x
 os.system(f"curl -s -o 'thumb.jpg' '{thumbnail()}'")
-def ultroid_cmd(pattern, owner_only=False):
+def ultroid_cmd(pattern, owner_only=False,sudo_also=False):
     def decorator(func):
         async def wrapper(event):
-            if owner_only and not event.sender_id == config.OWNER:
-                return
+            sudo_list=udB.get_key('SUDO_LIST') if udB.get_key('SUDO_LIST') else []
+            if owner_only:
+                if event.sender_id in sudo_list:
+                    return await event.reply("**Only Owner Can Run This Commad !!!**")
+                elif event.sender_id != config.OWNER: return
+            if sudo_also:
+                if not event.sender_id in sudo_list+[config.OWNER]: return
             await func(event)
         ptrn = rf'^[{re.escape(config.HNDLR)}]{pattern}'
         ultroid.on(events.NewMessage(pattern=ptrn))(wrapper)
@@ -84,6 +88,8 @@ def load_plugin(path,addon=False):
         mod.asst = ultroid
         mod.bot = ultroid
         mod.ultroid = ultroid
+        mod.asst=ultroid
+        mod.asst_cmd=ultroid_cmd
         mod.logger = LOGGER(base_name)
         mod.config = config
         mod.events=events
@@ -100,29 +106,27 @@ def load_plugin(path,addon=False):
         mod.load_plugin=load_plugin
         mod.unload_plugin=unload_plugin
         mod.HELP_STR=HELP_STR
-        mod.FUNCTIONS=FUNCTIONS
         spec.loader.exec_module(mod)
     except Exception as e: raise Error(f'**Error - `{e}`**')
     with open(path, 'r') as file:
         code = file.read()
     node=astroid.parse(code)
-    all_func=[]
     doc=None
     for n in node.body:
-        if isinstance(n, astroid.FunctionDef):
-            all_func.append(n.name)
-        elif isinstance(n, astroid.Assign):
+        if isinstance(n, astroid.Assign):
             doc=n.value.value
     if doc:
-        HELP_STR[base_name]=f"Help For `{base_name}`\n\n**{doc}**\n\n**Powered By [MattUb](https://github.com/itz-king/mattub)**"
+        HELP_STR[base_name]=f'''**Help For** `{base_name}`
+        
+**{doc.strip()}**
+        
+**Powered By** [MattUb](https://github.com/itz-king/mattub)'''
     else:
-        HELP_STR[base_name]=f"Help For `{base_name}`\n\n**No Help String Found For {base_name}**\n\n**Powered By [MattUb](https://github.com/itz-king/mattub)**"
-    FUNCTIONS[base_name]=all_func
-    try:
-        for x, _ in ultroid.list_event_handlers():
-                if x.__name__ in all_func:
-                    FUNCTIONS.append(x.__name__)
-    except: pass
+        HELP_STR[base_name]=HELP_STR[base_name]=f'''**Help For** `{base_name}`
+        
+No Help String Found For `{base_name}`
+        
+**Powered By** [MattUb](https://github.com/itz-king/mattub)'''
     
 def unload_plugin(short_name):
     path=ADDONS[short_name]
@@ -146,7 +150,6 @@ def unload_plugin(short_name):
             if cb.__module__ == name:
                 del ultroid._event_builders[i]
     del ADDONS[short_name]
-    del FUNCTIONS[short_name]
     del HELP_STR[short_name]
     try: del sys.modules[short_name]
     except: pass
