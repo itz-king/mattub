@@ -33,7 +33,7 @@ logger.info(f"Connected Successfully As - {me.first_name} ({me.username}) !!!")
 logger.info("»«»«»«»«»»«»«»«»«»»«»«»«»«»")
 logger.info("Starting To Load Modules !!!")
 thumb=udB.get_key('THUMB')
-if not thumb and thumb.startswith("http"):
+if not thumb:
         thumb="https://telegra.ph/file/9bb02a1a7420241a61e88.jpg"
 os.system(f"curl -s -o 'thumb.jpg' '{thumb}'")
 def ultroid_cmd(pattern, owner_only=False,sudo_also=False):
