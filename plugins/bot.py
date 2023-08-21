@@ -40,7 +40,8 @@ async def ping(event):
 async def restart(event):
     x=await event.reply("**__Restarting !!!__**")
     udB.set_key('RESTART_MSG',{'chat_id':event.chat_id,'msg_id':x.id})
-    for i in ADDONS:
+    add=ADDONS
+    for i in add:
         unload_plugin(i)
     try: shutil.rmtree('addons')
     except: pass
@@ -55,7 +56,8 @@ async def logs(event):
 async def update(event):
     x=await event.reply("**__Updating !!!__**")
     udB.set_key('RESTART_MSG',{'chat_id':event.chat_id,'msg_id':x.id})
-    for i in ADDONS:
+    add=ADDONS
+    for i in add:
         unload_plugin(i)
     try: shutil.rmtree('addons')
     except: pass
