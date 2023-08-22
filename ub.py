@@ -111,7 +111,7 @@ def load_plugin(path,addon=False):
     node=astroid.parse(code)
     doc=None
     for n in node.body:
-        if isinstance(n, astroid.Assign):
+        if isinstance(n, astroid.Assign) and n.targets[0].name == '_doc_':
             doc=n.value.value
     if doc:
         HELP_STR[base_name]=f'''**Help For** `{base_name}`

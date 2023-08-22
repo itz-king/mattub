@@ -1,4 +1,5 @@
 import math
+from telethon.events.messageedited import MessageEdited
 
 _doc_='''• `/help <optional plugin name>` - Get Help Of Different Modules'''
 
@@ -16,7 +17,10 @@ async def help_(event):
     if args:
         if args in HELP_STR: return await event.reply(HELP_STR[args],link_preview=False)
         else: return await event.reply(f'**No Module Named - `{args}` !!!**')
-    f_count=ultroid.list_event_handlers()
+    f_counts=ultroid.list_event_handlers()
+    f_count=[]
+    for i in f_counts:
+        if not isinstance(i[1],MessageEdited): f_count.append(i)
     if udB.get_key('HELP_PIC'): file_=udB.get_key('HELP_PIC')
     else: file_=None
     await event.reply(fmt.format(len(LOADED_MODULES),len(ADDONS),len(f_count)),
@@ -33,7 +37,10 @@ def get_help_buttons(list_ , page):
 @ultroid.on(events.CallbackQuery(pattern="^help ?(.*)"))
 async def helpcb(event):
     args=event.data_match.group(1).decode('utf-8').split()
-    f_count=ultroid.list_event_handlers()
+    f_counts=ultroid.list_event_handlers()
+    f_count=[]
+    for i in f_counts:
+        if not isinstance(i[1],MessageEdited): f_count.append(i)
     if not args:
         return await event.edit(fmt.format(len(LOADED_MODULES),len(ADDONS),len(f_count)),
             buttons=[[
